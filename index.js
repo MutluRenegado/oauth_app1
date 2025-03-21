@@ -1,44 +1,52 @@
- // Import required modules
+// Import required modules
+import express from 'express';
+import { createClient, OAuthStrategy } from '@wix/sdk';
+import { products } from '@wix/stores';
 import dotenv from 'dotenv';
-import { createClient, OAuthStrategy } from "@wix/sdk";
-import { availabilityCalendar, services } from "@wix/bookings";
-import { products } from "@wix/stores";
 
-// Load environment variables from the .env file
+// Load environment variables
 dotenv.config();
 
-// Use environment variables for sensitive information
-const clientId = process.env.CLIENT_ID;
-const clientSecret = process.env.CLIENT_SECRET;
+// Initialize the Express app
+const app = express();
+const port = process.env.PORT || 3000; // Use Railway's assigned port or default to 3000
 
-import { createWixClient } from './wix-client.mjs';
+// OAuth credentials from environment variables
+const clientId = process.env.WIX_CLIENT_ID;
+const accessToken = process.env.WIX_ACCESS_TOKEN;
+const accessTokenExpiry = process.env.WIX_ACCESS_TOKEN_EXPIRY; // ISO format date (e.g., 2025-12-31T23:59:59Z)
+const refreshToken = process.env.WIX_REFRESH_TOKEN;
 
-// Initialize the Wix Client
-async function initializeWixClient() {
-    try {
-        // Create the Wix SDK client with OAuth authentication
-        const client = createWixClient();
+// Create the Wix client
+const myWixClient = createClient({
+  modules: {
+    products,
+  },
+  auth: OAuthStrategy({
+    clientId: clientId,
+    tokens: {
+      accessToken: {
+        value: accessToken,
+        expiresAt: accessTokenExpiry,
+      },
+      refreshToken: {
+        value: refreshToken,
+      },
+    },
+  }),
+});
 
+// Endpoint to fetch products from Wix
+app.get('/products', async (req, res) => {
+  try {
+    const { items } = await myWixClient.products.queryProducts().find();
+    res.json(items);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching products from Wix', details: error.message });
+  }
+});
 
-        console.log("Wix Client Initialized");
-
-        // Sample usage of the Wix Bookings API
-        const availableServices = await services.list(client);
-        console.log("Available Services:", availableServices);
-
-        // Sample usage of the Wix Stores API
-        const storeProducts = await products.list(client);
-        console.log("Store Products:", storeProducts);
-
-        // Sample usage of the Wix Bookings Availability Calendar API
-        const calendar = await availabilityCalendar.list(client);
-        console.log("Availability Calendar:", calendar);
-
-        
-    } catch (error) {
-        console.error("Error initializing Wix client or API requests:", error);
-    }
-}
-
-// Run the function to initialize the client and interact with APIs
-initializeWixClient();
+// Start the Express server
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
