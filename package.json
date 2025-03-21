@@ -1,0 +1,21 @@
+{
+  "name": "oauth_app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@wix/bookings": "^1.0.622",
+    "@wix/sdk": "^1.15.14",
+    "@wix/sdk-react": "^0.5.9",
+    "@wix/stores": "^1.0.391",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
