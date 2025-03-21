@@ -2,6 +2,7 @@
   "name": "oauth_app",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node index.js"
   },
@@ -10,11 +11,12 @@
     "@wix/sdk": "^1.15.14",
     "@wix/sdk-react": "^0.5.9",
     "@wix/stores": "^1.0.391",
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "express": "^4.18.2"
   },
   "devDependencies": {},
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   },
   "author": "",
   "license": "ISC"
