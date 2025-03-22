@@ -1,50 +1,29 @@
-import express from 'express';
-import { createClient, OAuthStrategy } from '@wix/sdk';
-import { products } from '@wix/stores';
+// index.js
+import dotenv from 'dotenv';
+import { getAvailableServices, getStoreProducts, getAvailabilityCalendar } from './wix-client.js';
 
-// Initialize the Express app
-const app = express();
+// Load environment variables from the .env file
+dotenv.config();
 
-// Use the dynamic port from Railway or fallback to 3000
-const port = process.env.PORT || 3000;
-
-// OAuth credentials
-const clientId = "<YOUR_CLIENT_ID>";
-const accessToken = "<ACCESS_TOKEN_VALUE>";
-const accessTokenExpiry = "<ACCESS_TOKEN_EXPIRY_DATE>"; 
-const refreshToken = "<REFRESH_TOKEN_VALUE>";
-
-// Create the Wix client
-const myWixClient = createClient({
-  modules: {
-    products,
-  },
-  auth: OAuthStrategy({
-    clientId: clientId,
-    tokens: {
-      accessToken: {
-        value: accessToken,
-        expiresAt: accessTokenExpiry,
-      },
-      refreshToken: {
-        value: refreshToken,
-      },
-    },
-  }),
-});
-
-// Endpoint to fetch products from Wix
-app.get('/products', async (req, res) => {
+// Initialize the Wix Client and interact with Wix APIs
+async function initializeWixClient() {
   try {
-    // Fetch the list of products
-    const { items } = await myWixClient.products.queryProducts().find();
-    res.json(items);  // Send the products as a response
-  } catch (error) {
-    res.status(500).json({ error: 'Error fetching products from Wix', details: error.message });
-  }
-});
+    // Sample usage of the Wix Bookings API: List available services
+    const availableServices = await getAvailableServices();
+    console.log('Available Services:', availableServices);
 
-// Start the Express server
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+    // Sample usage of the Wix Stores API: List store products
+    const storeProducts = await getStoreProducts();
+    console.log('Store Products:', storeProducts);
+
+    // Sample usage of the Wix Bookings Availability Calendar API: Get availability
+    const calendar = await getAvailabilityCalendar();
+    console.log('Availability Calendar:', calendar);
+
+  } catch (error) {
+    console.error('Error initializing Wix client or API requests:', error);
+  }
+}
+
+// Run the function to initialize the client and interact with APIs
+initializeWixClient();
