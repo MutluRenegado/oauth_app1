@@ -1,6 +1,5 @@
-// index.js
 import dotenv from 'dotenv';
-import { getAvailableServices, getStoreProducts, getAvailabilityCalendar } from './wix-client.js';
+import { getAvailableServices, getStoreProducts, getAvailabilityCalendar } from './wix-client.mjs';
 
 // Load environment variables from the .env file
 dotenv.config();
