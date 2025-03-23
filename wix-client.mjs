@@ -33,9 +33,9 @@ export function createWixClient() {
 export async function getAvailableServices() {
   try {
     const client = createWixClient();
-    const availableServices = await services.list(client);
-    console.log('Available Services:', availableServices);
-    return availableServices;
+    const availableServices = await services.query(client).find();
+    console.log('Available Services:', availableServices.items);
+    return availableServices.items;
   } catch (error) {
     console.error('Error fetching available services:', error);
     throw error; // Throw error after logging
@@ -46,9 +46,9 @@ export async function getAvailableServices() {
 export async function getStoreProducts() {
   try {
     const client = createWixClient();
-    const storeProducts = await products.list(client);
-    console.log('Store Products:', storeProducts);
-    return storeProducts;
+    const storeProducts = await products.query(client).find();
+    console.log('Store Products:', storeProducts.items);
+    return storeProducts.items;
   } catch (error) {
     console.error('Error fetching store products:', error);
     throw error; // Throw error after logging
@@ -59,9 +59,9 @@ export async function getStoreProducts() {
 export async function getAvailabilityCalendar() {
   try {
     const client = createWixClient();
-    const calendar = await availabilityCalendar.list(client);
-    console.log('Availability Calendar:', calendar);
-    return calendar;
+    const calendar = await availabilityCalendar.query(client).find();
+    console.log('Availability Calendar:', calendar.items);
+    return calendar.items;
   } catch (error) {
     console.error('Error fetching availability calendar:', error);
     throw error; // Throw error after logging
